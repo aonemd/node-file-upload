@@ -8,7 +8,7 @@ app.use(busboy({
     highWaterMark: 2 * 1024 * 1024, // Set 2MiB buffer
 })); // Insert the busboy middle-ware
 
-const uploadPath = path.join(__dirname, 'fu/'); // Register the upload path
+const uploadPath = path.join(__dirname, 'uploads/'); // Register the upload path
 fs.ensureDir(uploadPath); // Make sure that he upload path exits
 
 
@@ -19,7 +19,8 @@ app.route('/upload').post((req, res, next) => {
 
     req.pipe(req.busboy); // Pipe it trough busboy
 
-    req.busboy.on('file', (fieldname, file, filename) => {
+    req.busboy.on('file', (fieldname, file, info) => {
+        const filename = info.filename;
         console.log(`Upload of '${filename}' started`);
 
         // Create a write stream of the new file
